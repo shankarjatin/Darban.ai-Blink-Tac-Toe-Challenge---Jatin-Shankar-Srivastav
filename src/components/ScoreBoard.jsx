@@ -1,28 +1,52 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Box, Paper, Typography, Button, Chip, Badge, IconButton, Divider, Avatar } from '@mui/material';
-// Remove all icon imports
+import { Box, Paper, Typography, Button, Chip, Badge, Avatar, useMediaQuery, useTheme } from '@mui/material';
 import '../index.css';
 
 export default function ScoreBoard({ names, scores, turn, gameOver, winner, onHelp }) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <Paper 
       elevation={3} 
       sx={{ 
         p: { xs: 2, sm: 3 }, 
-        mb: 3, 
+        mb: { xs: 2, sm: 3 }, 
         borderRadius: 3,
         background: 'linear-gradient(145deg, #f0f0f0, #ffffff)',
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+        overflow: 'hidden',
+        width: '100%'
       }}
     >
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-          <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', color: '#333' }}>
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          flexDirection: isMobile ? 'column' : 'row',
+          gap: 2
+        }}
+      >
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: 1,
+          width: isMobile ? '100%' : 'auto'
+        }}>
+          <Typography 
+            variant={isMobile ? "subtitle1" : "h6"} 
+            sx={{ fontWeight: 'bold', color: '#333' }}
+          >
             Scoreboard
           </Typography>
           
-          <Box sx={{ display: 'flex', gap: 3 }}>
+          <Box sx={{ 
+            display: 'flex',
+            gap: 3,
+            justifyContent: isMobile ? 'center' : 'flex-start',
+            width: '100%'
+          }}>
             {[0, 1].map((i) => (
               <Box
                 key={i}
@@ -30,16 +54,17 @@ export default function ScoreBoard({ names, scores, turn, gameOver, winner, onHe
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  p: 1,
+                  p: 1.5,
                   borderRadius: 2,
-                  minWidth: 100,
                   backgroundColor: turn % 2 === i && !gameOver ? 
                     i === 0 ? 'rgba(139, 92, 246, 0.1)' : 'rgba(16, 185, 129, 0.1)' 
                     : 'transparent',
                   border: turn % 2 === i && !gameOver ? 
                     `1px solid ${i === 0 ? '#8b5cf6' : '#10b981'}` 
                     : '1px solid transparent',
-                  transition: 'all 0.3s ease'
+                  transition: 'all 0.3s ease',
+                  flex: isMobile ? '1' : '0',
+                  minWidth: isMobile ? '0' : '100px'
                 }}
               >
                 <Badge
@@ -86,7 +111,7 @@ export default function ScoreBoard({ names, scores, turn, gameOver, winner, onHe
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
-                    maxWidth: 120
+                    maxWidth: '100%'
                   }}
                 >
                   {names[i]}
@@ -96,48 +121,63 @@ export default function ScoreBoard({ names, scores, turn, gameOver, winner, onHe
           </Box>
         </Box>
 
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: isMobile ? 'row' : 'column',
+          alignItems: isMobile ? 'center' : 'flex-end',
+          justifyContent: 'space-between',
+          width: isMobile ? '100%' : 'auto',
+          mt: isMobile ? 1 : 0
+        }}>
           {gameOver ? (
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+              style={{ flex: isMobile ? '1' : 'auto' }}
             >
               <Chip
-                // Remove icon prop
                 label={`${winner} Wins!`}
                 color="success"
                 sx={{ 
                   fontWeight: 'bold',
-                  px: 1,
-                  py: 2.5,
+                  py: 1.5,
                   background: 'linear-gradient(to right, #10b981, #059669)',
+                  width: isMobile ? '100%' : 'auto',
                 }}
               />
             </motion.div>
           ) : (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              {/* Remove PsychologyIcon and just use text */}
+            <Box sx={{ 
+              flex: isMobile ? '1' : 'auto', 
+              display: 'flex', 
+              justifyContent: isMobile ? 'center' : 'flex-end',
+              width: isMobile ? '100%' : 'auto'
+            }}>
               <Chip
                 label={`${names[turn % 2]}'s turn`}
                 color={turn % 2 === 0 ? "primary" : "secondary"}
                 variant="filled"
-                size="medium"
-                sx={{ fontWeight: 'medium' }}
+                size={isMobile ? "small" : "medium"}
+                sx={{ 
+                  fontWeight: 'medium',
+                  width: isMobile ? '100%' : 'auto'
+                }}
               />
             </Box>
           )}
           
           <Button
-            // Replace IconButton with regular Button
             onClick={onHelp}
             color="info"
             variant="outlined"
-            size="small"
+            size={isMobile ? "small" : "medium"}
             sx={{ 
-              mt: { xs: 1, sm: 2 },
+              mt: isMobile ? 0 : 2,
+              ml: isMobile ? 2 : 0,
               transition: 'all 0.2s',
               borderRadius: 2,
+              minWidth: isMobile ? '80px' : '100px',
               '&:hover': {
                 backgroundColor: 'rgba(25, 118, 210, 0.08)',
                 transform: 'scale(1.05)'

@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  TextField, 
-  Button, 
-  Box, 
-  Paper, 
-  Typography, 
-  Grid, 
-  useMediaQuery, 
+import {
+  TextField,
+  Button,
+  Box,
+  Paper,
+  Typography,
+  Grid,
+  useMediaQuery,
   Card,
   CardContent,
   Divider,
@@ -24,7 +24,8 @@ export default function PlayerSetup({
 }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  
+  const [selectedCategories, setSelectedCategories] = useState([null, null]);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -34,10 +35,14 @@ export default function PlayerSetup({
       }
     }
   };
-  
+
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
     visible: { y: 0, opacity: 1 }
+  };
+
+  const isCategoryDisabled = (playerIndex, category) => {
+    return selectedCategories[(playerIndex + 1) % 2] === category;
   };
 
   return (
@@ -47,23 +52,23 @@ export default function PlayerSetup({
       initial="hidden"
       animate="visible"
     >
-      <Paper 
-        elevation={3} 
-        sx={{ 
-          borderRadius: 3, 
+      <Paper
+        elevation={3}
+        sx={{
+          borderRadius: 3,
           overflow: 'hidden',
           width: '100%',
           backgroundColor: 'rgba(255, 255, 255, 0.95)',
           boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
         }}
       >
-        <Box sx={{ 
-          background: 'linear-gradient(90deg, #8b5cf6 0%, #3b82f6 100%)', 
+        <Box sx={{
+          background: 'linear-gradient(90deg, #8b5cf6 0%, #3b82f6 100%)',
           p: 3,
           textAlign: 'center'
         }}>
-          <Typography variant="h4" sx={{ 
-            fontWeight: 'bold', 
+          <Typography variant="h4" sx={{
+            fontWeight: 'bold',
             color: 'white',
             textShadow: '0 2px 4px rgba(0,0,0,0.2)'
           }}>
@@ -72,125 +77,137 @@ export default function PlayerSetup({
         </Box>
 
         <Box sx={{ p: { xs: 2, sm: 4 }, maxWidth: '100%' }} className="space-y-6">
-          {[0, 1].map(i => (
-            <motion.div key={i} variants={itemVariants}>
-              <Card 
-                elevation={2} 
-                sx={{ 
-                  mb: 3, 
-                  borderRadius: 2,
-                  transition: 'transform 0.2s',
-                  '&:hover': {
-                    transform: 'translateY(-4px)'
-                  }
-                }}
-              >
-                <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
-                  <Typography 
-                    variant="h6" 
-                    sx={{ 
-                      fontWeight: 600, 
-                      mb: 2, 
-                      color: i === 0 ? '#8b5cf6' : '#3b82f6',
-                      display: 'flex',
-                      alignItems: 'center'
+          <Grid container spacing={3}>
+            {[0, 1].map(i => (
+              <Grid item xs={12} sm={6} key={i}>
+                <motion.div variants={itemVariants}>
+                  <Card
+                    elevation={2}
+                    sx={{
+                      borderRadius: 2,
+                      transition: 'transform 0.2s',
+                      '&:hover': {
+                        transform: 'translateY(-4px)'
+                      }
                     }}
                   >
-                    <Box 
-                      component="span" 
-                      sx={{ 
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        justifyContent: 'center', 
-                        width: 32, 
-                        height: 32,
-                        mr: 1.5,
-                        borderRadius: '50%',
-                        backgroundColor: i === 0 ? '#8b5cf6' : '#3b82f6',
-                        color: 'white',
-                        fontWeight: 'bold'
-                      }}
-                    >
-                      {i+1}
-                    </Box>
-                    Player {i + 1}
-                  </Typography>
-                  
-                  <TextField
-                    fullWidth
-                    label="Player Name"
-                    placeholder={`Enter name for Player ${i + 1}`}
-                    variant="outlined"
-                    size={isMobile ? "small" : "medium"}
-                    sx={{ mb: 3 }}
-                    value={nameInputs[i]}
-                    onChange={e => {
-                      const newNames = [...nameInputs];
-                      newNames[i] = e.target.value;
-                      setNameInputs(newNames);
-                    }}
-                    InputProps={{
-                      sx: { borderRadius: 2 }
-                    }}
-                  />
-                  
-                  <Divider sx={{ mb: 2 }} />
-                  
-                  <Typography 
-                    variant="subtitle2" 
-                    sx={{ mb: 1.5, fontWeight: 500, color: 'text.secondary' }}
-                  >
-                    Choose emoji category:
-                  </Typography>
-                  
-                  <Grid container spacing={1}>
-                    {Object.entries(emojiCategories).map(([key, emojis]) => {
-                      const isSelected = key === nameInputs[i];
-                      return (
-                        <Grid item xs={6} sm={4} key={key}>
-                          <Button
-                            variant={isSelected ? "contained" : "outlined"}
-                            color={i === 0 ? "primary" : "secondary"}
-                            onClick={() => handleCategorySelect(i, key)}
-                            fullWidth
-                            sx={{
-                              borderRadius: 2,
-                              height: '100%',
-                              p: 1,
-                              textTransform: 'none',
-                              borderWidth: isSelected ? 0 : 1,
-                              backgroundColor: isSelected 
-                                ? i === 0 ? 'primary.main' : 'secondary.main' 
-                                : 'transparent',
-                              '&:hover': {
-                                backgroundColor: isSelected 
-                                  ? i === 0 ? 'primary.dark' : 'secondary.dark' 
-                                  : 'rgba(0,0,0,0.04)'
-                              }
-                            }}
-                          >
-                            <Box sx={{ textAlign: 'center', width: '100%' }}>
-                              <Typography 
-                                variant="caption" 
-                                display="block" 
-                                sx={{ mb: 0.5, color: isSelected ? 'white' : 'inherit' }}
+                    <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 700,
+                          mb: 2,
+                          color: i === 0 ? '#8b5cf6' : '#3b82f6',
+                          display: 'flex',
+                          alignItems: 'center'
+                        }}
+                      >
+                        <Box
+                          component="span"
+                          sx={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: 32,
+                            height: 32,
+                            mr: 1.5,
+                            borderRadius: '50%',
+                            backgroundColor: i === 0 ? '#8b5cf6' : '#3b82f6',
+                            color: 'white',
+                            fontWeight: 'bold'
+                          }}
+                        >
+                          {i + 1}
+                        </Box>
+                        Player {i + 1}
+                      </Typography>
+
+                      <TextField
+                        fullWidth
+                        label="Player Name"
+                        placeholder={`Enter name for Player ${i + 1}`}
+                        variant="outlined"
+                        size={isMobile ? "small" : "medium"}
+                        sx={{ mb: 3 }}
+                        value={nameInputs[i]}
+                        onChange={e => {
+                          const newNames = [...nameInputs];
+                          newNames[i] = e.target.value;
+                          setNameInputs(newNames);
+                        }}
+                        InputProps={{
+                          sx: { borderRadius: 2, fontWeight: 600 }
+                        }}
+                      />
+
+                      <Divider sx={{ mb: 2 }} />
+
+                      <Typography
+                        variant="subtitle2"
+                        sx={{ mb: 1.5, fontWeight: 600, color: 'text.secondary' }}
+                      >
+                        Choose emoji category:
+                      </Typography>
+
+                      <Grid container spacing={1}>
+                        {Object.entries(emojiCategories).map(([key, emojis]) => {
+                          const isSelected = selectedCategories[i] === key;
+                          const disabled = isCategoryDisabled(i, key);
+
+                          return (
+                            <Grid item xs={6} sm={12} key={key}>
+                              <Button
+                                variant={isSelected ? "contained" : "outlined"}
+                                color={i === 0 ? "primary" : "secondary"}
+                                disabled={disabled}
+                                onClick={() => {
+                                  handleCategorySelect(i, key);
+                                  const updated = [...selectedCategories];
+                                  updated[i] = key;
+                                  setSelectedCategories(updated);
+                                }}
+                                fullWidth
+                                sx={{
+                                  borderRadius: 2,
+                                  height: '100%',
+                                  p: 1,
+                                  fontWeight: 600,
+                                  textTransform: 'none',
+                                  backgroundColor: isSelected
+                                    ? i === 0 ? 'primary.main' : 'secondary.main'
+                                    : 'transparent',
+                                  '&:hover': {
+                                    backgroundColor: isSelected
+                                      ? i === 0 ? 'primary.dark' : 'secondary.dark'
+                                      : 'rgba(0,0,0,0.04)'
+                                  },
+                                  opacity: disabled ? 0.4 : 1
+                                }}
                               >
-                                {key}
-                              </Typography>
-                              <Box sx={{ fontSize: '1.2rem', lineHeight: 1.5 }}>
-                                {emojis.slice(0, 3).join(' ')}
-                              </Box>
-                            </Box>
-                          </Button>
-                        </Grid>
-                      );
-                    })}
-                  </Grid>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-          
+                                <Box sx={{ textAlign: 'center', width: '100%' }}>
+                                  <Typography
+                                    variant="caption"
+                                    display="block"
+                                    sx={{ mb: 0.5, color: isSelected ? 'white' : 'inherit' }}
+                                  >
+                                    {key}
+                                  </Typography>
+                                  <Box sx={{ fontSize: '1.2rem', lineHeight: 1.5 }}>
+                                    {emojis.slice(0, 3).join(' ')}
+                                  </Box>
+                                </Box>
+                              </Button>
+                            </Grid>
+                          );
+                        })}
+                      </Grid>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </Grid>
+            ))}
+          </Grid>
+
           <motion.div variants={itemVariants}>
             <Button
               variant="contained"

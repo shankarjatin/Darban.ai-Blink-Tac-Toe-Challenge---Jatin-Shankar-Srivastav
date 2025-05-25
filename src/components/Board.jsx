@@ -1,20 +1,25 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Paper, Box, Button } from '@mui/material';
-// Remove ReplayIcon import
+import { Paper, Box, Button, useMediaQuery, useTheme } from '@mui/material';
 
 export default function Board({ board, handleCellClick, gameOver, resetGame, winningLine }) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const clickSoundRef = useRef(null);
   const winSoundRef = useRef(null);
   const hoverSoundRef = useRef(null);
 
   // Initialize sounds
   useEffect(() => {
-    // Create Audio elements
-    clickSoundRef.current = new Audio('/sounds/pop.mp3');
-    winSoundRef.current = new Audio('/sounds/win.mp3');
-    hoverSoundRef.current = new Audio('/sounds/hover.mp3');
-    hoverSoundRef.current.volume = 0.2;
+    try {
+      // Create Audio elements
+      clickSoundRef.current = new Audio('/sounds/pop.mp3');
+      winSoundRef.current = new Audio('/sounds/win.mp3');
+      hoverSoundRef.current = new Audio('/sounds/hover.mp3');
+      hoverSoundRef.current.volume = 0.2;
+    } catch (error) {
+      console.error("Sound initialization failed:", error);
+    }
     
     // Clean up
     return () => {
@@ -30,24 +35,36 @@ export default function Board({ board, handleCellClick, gameOver, resetGame, win
   // Play win sound when game is over
   useEffect(() => {
     if (gameOver && winSoundRef.current) {
-      winSoundRef.current.play();
+      try {
+        winSoundRef.current.play();
+      } catch (error) {
+        console.error("Error playing win sound:", error);
+      }
     }
   }, [gameOver]);
 
   // Handle cell click with sound
   const handleCellWithSound = (index) => {
     if (!gameOver && !board[index] && clickSoundRef.current) {
-      clickSoundRef.current.currentTime = 0;
-      clickSoundRef.current.play();
+      try {
+        clickSoundRef.current.currentTime = 0;
+        clickSoundRef.current.play();
+      } catch (error) {
+        console.error("Error playing click sound:", error);
+      }
     }
     handleCellClick(index);
   };
 
   // Handle hover sound
   const handleHover = () => {
-    if (hoverSoundRef.current) {
-      hoverSoundRef.current.currentTime = 0;
-      hoverSoundRef.current.play();
+    if (hoverSoundRef.current && !isMobile) {
+      try {
+        hoverSoundRef.current.currentTime = 0;
+        hoverSoundRef.current.play();
+      } catch (error) {
+        console.error("Error playing hover sound:", error);
+      }
     }
   };
 
@@ -58,17 +75,20 @@ export default function Board({ board, handleCellClick, gameOver, resetGame, win
         p: { xs: 2, sm: 3 },
         borderRadius: 3,
         background: 'linear-gradient(145deg, #f0f0f0, #ffffff)',
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+        width: '100%',
+        maxWidth: '100%',
+        overflow: 'hidden'
       }}
     >
-      <div className="grid grid-cols-3 gap-2 sm:gap-3">
+      <div className="grid grid-cols-3 gap-2 sm:gap-3 w-full">
         {board.map((cell, index) => (
           <motion.button
             key={index}
             onClick={() => handleCellWithSound(index)}
             onMouseEnter={handleHover}
             disabled={gameOver || board[index] !== null}
-            className={`aspect-square w-full text-4xl sm:text-5xl md:text-6xl flex items-center justify-center rounded-xl transition-all
+            className={`aspect-square w-full text-3xl sm:text-4xl md:text-5xl lg:text-6xl flex items-center justify-center rounded-xl transition-all
               ${winningLine && winningLine.includes(index) 
                 ? 'bg-gradient-to-br from-yellow-100 to-yellow-300 shadow-lg ring-2 ring-yellow-500' 
                 : 'bg-white hover:bg-gray-50 active:bg-gray-100'}`}
@@ -78,10 +98,10 @@ export default function Board({ board, handleCellClick, gameOver, resetGame, win
                 : '0 4px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.5)'
             }}
             whileHover={{ 
-              scale: board[index] ? 1 : 1.05,
+              scale: board[index] || isMobile ? 1 : 1.03,
               boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.5)'
             }}
-            whileTap={{ scale: 0.95 }}
+            whileTap={{ scale: 0.97 }}
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3, type: "spring" }}
@@ -127,12 +147,11 @@ export default function Board({ board, handleCellClick, gameOver, resetGame, win
             onClick={resetGame}
             className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl shadow-md hover:shadow-lg font-semibold flex items-center justify-center"
             whileHover={{ 
-              scale: 1.02,
+              scale: isMobile ? 1 : 1.02,
               boxShadow: '0 6px 20px rgba(124, 58, 237, 0.4)'
             }}
             whileTap={{ scale: 0.98 }}
           >
-            {/* Remove ReplayIcon */}
             Play Again
           </motion.button>
           
