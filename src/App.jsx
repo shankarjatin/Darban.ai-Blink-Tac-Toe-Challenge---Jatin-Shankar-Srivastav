@@ -8,9 +8,10 @@ function App() {
 
   return (
     <>
-<div className="min-h-screen bg-gradient-to-tr from-purple-300 to-pink-200 flex items-center justify-center p-4">
-<h2>heello</h2>
+    <div className="min-h-screen bg-gradient-to-tr from-purple-300 to-pink-200 flex items-center justify-center p-4">
+      <Game />
     </div>
+
     </>
   )
 }
