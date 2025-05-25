@@ -1,9 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Box, Paper, Typography, Button, Chip, Badge, IconButton, Divider, Avatar } from '@mui/material';
-import HelpIcon from '@mui/icons-material/Help';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import PsychologyIcon from '@mui/icons-material/Psychology';
+// Remove all icon imports
 import '../index.css';
 
 export default function ScoreBoard({ names, scores, turn, gameOver, winner, onHelp }) {
@@ -106,7 +104,7 @@ export default function ScoreBoard({ names, scores, turn, gameOver, winner, onHe
               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
             >
               <Chip
-                icon={<EmojiEventsIcon />}
+                // Remove icon prop
                 label={`${winner} Wins!`}
                 color="success"
                 sx={{ 
@@ -114,16 +112,12 @@ export default function ScoreBoard({ names, scores, turn, gameOver, winner, onHe
                   px: 1,
                   py: 2.5,
                   background: 'linear-gradient(to right, #10b981, #059669)',
-                  '& .MuiChip-icon': { color: 'white' }
                 }}
               />
             </motion.div>
           ) : (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <PsychologyIcon 
-                color={turn % 2 === 0 ? "primary" : "secondary"} 
-                sx={{ animation: 'pulse 1.5s infinite' }}
-              />
+              {/* Remove PsychologyIcon and just use text */}
               <Chip
                 label={`${names[turn % 2]}'s turn`}
                 color={turn % 2 === 0 ? "primary" : "secondary"}
@@ -134,22 +128,24 @@ export default function ScoreBoard({ names, scores, turn, gameOver, winner, onHe
             </Box>
           )}
           
-          <IconButton
+          <Button
+            // Replace IconButton with regular Button
             onClick={onHelp}
             color="info"
+            variant="outlined"
+            size="small"
             sx={{ 
               mt: { xs: 1, sm: 2 },
-              border: '1px solid rgba(25, 118, 210, 0.3)',
               transition: 'all 0.2s',
+              borderRadius: 2,
               '&:hover': {
                 backgroundColor: 'rgba(25, 118, 210, 0.08)',
                 transform: 'scale(1.05)'
               }
             }}
-            size="medium"
           >
-            <HelpIcon />
-          </IconButton>
+            Help
+          </Button>
         </Box>
       </Box>
     </Paper>

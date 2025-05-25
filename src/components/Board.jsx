@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Paper, Box } from '@mui/material';
-import ReplayIcon from '@mui/icons-material/Replay';
-import useSound from 'use-sound';
+import { Paper, Box, Button } from '@mui/material';
+// Remove ReplayIcon import
 
 export default function Board({ board, handleCellClick, gameOver, resetGame, winningLine }) {
   const clickSoundRef = useRef(null);
@@ -133,7 +132,7 @@ export default function Board({ board, handleCellClick, gameOver, resetGame, win
             }}
             whileTap={{ scale: 0.98 }}
           >
-            <ReplayIcon sx={{ mr: 1 }} />
+            {/* Remove ReplayIcon */}
             Play Again
           </motion.button>
           

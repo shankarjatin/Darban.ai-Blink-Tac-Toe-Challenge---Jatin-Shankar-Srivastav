@@ -105,29 +105,41 @@ export default function Game() {
       [0, 4, 8], [2, 4, 6],            // diagonals
     ];
 
-    for (let line of lines) {
-      const [a, b, c] = line;
-      if (
-        newBoard[a] &&
-        newPositions[playerIndex].includes(a) &&
-        newPositions[playerIndex].includes(b) &&
-        newPositions[playerIndex].includes(c)
-      ) {
-        const updatedScores = [...scores];
-        updatedScores[playerIndex]++;
-        setScores(updatedScores);
-        setWinner(names[playerIndex]);
-        setWinningLine(line);
-        
-        setNotification({
-          open: true,
-          message: `${names[playerIndex]} wins the game!`,
-          severity: 'success'
-        });
-        
-        return;
-      }
-    }
+// Add to your existing handleCellClick function:
+
+for (let line of lines) {
+  const [a, b, c] = line;
+  if (
+    newBoard[a] &&
+    newPositions[playerIndex].includes(a) &&
+    newPositions[playerIndex].includes(b) &&
+    newPositions[playerIndex].includes(c)
+  ) {
+    const updatedScores = [...scores];
+    updatedScores[playerIndex]++;
+    setScores(updatedScores);
+    setWinner(names[playerIndex]);
+    setWinningLine(line);
+    
+    // Play confetti effect for winner
+    import('canvas-confetti').then(confettiModule => {
+      const confetti = confettiModule.default;
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+    });
+    
+    setNotification({
+      open: true,
+      message: `${names[playerIndex]} wins the game!`,
+      severity: 'success'
+    });
+    
+    return;
+  }
+}
 
     setTurn(turn + 1);
   };
