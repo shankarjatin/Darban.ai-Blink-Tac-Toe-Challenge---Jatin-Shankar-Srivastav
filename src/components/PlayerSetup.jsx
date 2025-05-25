@@ -13,10 +13,8 @@ import {
   Divider,
   useTheme,
   Avatar,
-  IconButton,
   Tooltip
 } from '@mui/material';
-import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import '../index.css';
 
 export default function PlayerSetup({
@@ -29,7 +27,7 @@ export default function PlayerSetup({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [selectedCategories, setSelectedCategories] = useState([null, null]);
-  // New: Avatar upload
+  // New: Avatar upload (no icon)
   const [avatars, setAvatars] = useState([null, null]);
 
   const containerVariants = {
@@ -51,7 +49,7 @@ export default function PlayerSetup({
     return selectedCategories[(playerIndex + 1) % 2] === category;
   };
 
-  // Handle avatar upload
+  // Handle avatar upload (no icon)
   const handleAvatarChange = (i, e) => {
     const file = e.target.files[0];
     if (file) {
@@ -133,9 +131,20 @@ export default function PlayerSetup({
                         />
                         <label htmlFor={`avatar-upload-${i}`}>
                           <Tooltip title="Upload Avatar">
-                            <IconButton component="span" size="small">
-                              <PhotoCamera />
-                            </IconButton>
+                            <Button
+                              component="span"
+                              size="small"
+                              variant="outlined"
+                              sx={{
+                                minWidth: 0,
+                                px: 1,
+                                py: 0.5,
+                                fontSize: '0.75rem',
+                                ml: 1
+                              }}
+                            >
+                              Upload
+                            </Button>
                           </Tooltip>
                         </label>
                         <Typography
