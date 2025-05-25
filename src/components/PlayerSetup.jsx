@@ -11,8 +11,12 @@ import {
   Card,
   CardContent,
   Divider,
-  useTheme
+  useTheme,
+  Avatar,
+  IconButton,
+  Tooltip
 } from '@mui/material';
+import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import '../index.css';
 
 export default function PlayerSetup({
@@ -25,6 +29,8 @@ export default function PlayerSetup({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [selectedCategories, setSelectedCategories] = useState([null, null]);
+  // New: Avatar upload
+  const [avatars, setAvatars] = useState([null, null]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -43,6 +49,20 @@ export default function PlayerSetup({
 
   const isCategoryDisabled = (playerIndex, category) => {
     return selectedCategories[(playerIndex + 1) % 2] === category;
+  };
+
+  // Handle avatar upload
+  const handleAvatarChange = (i, e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const updated = [...avatars];
+        updated[i] = ev.target.result;
+        setAvatars(updated);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -92,35 +112,43 @@ export default function PlayerSetup({
                     }}
                   >
                     <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          fontWeight: 700,
-                          mb: 2,
-                          color: i === 0 ? '#8b5cf6' : '#3b82f6',
-                          display: 'flex',
-                          alignItems: 'center'
-                        }}
-                      >
-                        <Box
-                          component="span"
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                        <Avatar
+                          src={avatars[i]}
                           sx={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            width: 32,
-                            height: 32,
-                            mr: 1.5,
-                            borderRadius: '50%',
-                            backgroundColor: i === 0 ? '#8b5cf6' : '#3b82f6',
-                            color: 'white',
-                            fontWeight: 'bold'
+                            width: 48,
+                            height: 48,
+                            bgcolor: i === 0 ? '#8b5cf6' : '#3b82f6',
+                            mr: 2
                           }}
                         >
-                          {i + 1}
-                        </Box>
-                        Player {i + 1}
-                      </Typography>
+                          {nameInputs[i]?.[0]?.toUpperCase() || i + 1}
+                        </Avatar>
+                        <input
+                          accept="image/*"
+                          style={{ display: 'none' }}
+                          id={`avatar-upload-${i}`}
+                          type="file"
+                          onChange={e => handleAvatarChange(i, e)}
+                        />
+                        <label htmlFor={`avatar-upload-${i}`}>
+                          <Tooltip title="Upload Avatar">
+                            <IconButton component="span" size="small">
+                              <PhotoCamera />
+                            </IconButton>
+                          </Tooltip>
+                        </label>
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            fontWeight: 700,
+                            ml: 1,
+                            color: i === 0 ? '#8b5cf6' : '#3b82f6',
+                          }}
+                        >
+                          Player {i + 1}
+                        </Typography>
+                      </Box>
 
                       <TextField
                         fullWidth
