@@ -27,11 +27,11 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-100 flex items-center justify-center p-2">
-        {/* Change maxWidth to "sm" for mobile and larger for desktop */}
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-100 flex items-center justify-center p-4">
+        {/* Use md for medium devices, giving more width */}
         <Container 
-          className="py-4" 
-          maxWidth="sm"
+          className="py-6" 
+          maxWidth="md"
           sx={{
             width: '100%',
             height: '100%',
@@ -39,7 +39,7 @@ function App() {
             justifyContent: 'center',
           }}
         >
-          <div className="w-full max-w-md"> {/* Ensure the game has a max width but can grow */}
+          <div className="w-full max-w-2xl"> {/* Increased max width */}
             <Game />
           </div>
         </Container>

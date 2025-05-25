@@ -145,33 +145,32 @@ export default function Game() {
     setNotification({ ...notification, open: false });
   };
 
-  if (!categories.every(Boolean) || !nameInputs.every(Boolean) || names[0] === 'Player 1') {
-    return (
-  <div className="bg-white p-6 rounded-lg shadow-lg w-full">
-    <h1 className="text-2xl font-bold mb-6 text-center text-white bg-gradient-to-r from-purple-600 to-blue-600 p-3 rounded-lg">
-          Blink Tac Toe
-        </h1>
-        <PlayerSetup
-          emojiCategories={emojiCategories}
-          nameInputs={nameInputs}
-          setNameInputs={setNameInputs}
-          handleCategorySelect={handleCategorySelect}
-          saveNames={saveNames}
-        />
-        
-        <Snackbar
-          open={notification.open}
-          autoHideDuration={3000}
-          onClose={handleCloseNotification}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        >
-          <Alert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
-            {notification.message}
-          </Alert>
-        </Snackbar>
-      </div>
-    );
-  }
+// Update the return statement for the setup screen
+
+if (!categories.every(Boolean) || !nameInputs.every(Boolean) || names[0] === 'Player 1') {
+  return (
+    <div className="w-full">
+      <PlayerSetup
+        emojiCategories={emojiCategories}
+        nameInputs={nameInputs}
+        setNameInputs={setNameInputs}
+        handleCategorySelect={handleCategorySelect}
+        saveNames={saveNames}
+      />
+      
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={3000}
+        onClose={handleCloseNotification}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+          {notification.message}
+        </Alert>
+      </Snackbar>
+    </div>
+  );
+}
 
   return (
    <div className="w-full bg-white p-4 md:p-6 rounded-lg shadow-lg">
