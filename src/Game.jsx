@@ -147,8 +147,8 @@ export default function Game() {
 
   if (!categories.every(Boolean) || !nameInputs.every(Boolean) || names[0] === 'Player 1') {
     return (
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-xl w-full">
-        <h1 className="text-2xl font-bold mb-6 text-center text-white bg-gradient-to-r from-purple-600 to-blue-600 p-3 rounded-lg">
+  <div className="bg-white p-6 rounded-lg shadow-lg w-full">
+    <h1 className="text-2xl font-bold mb-6 text-center text-white bg-gradient-to-r from-purple-600 to-blue-600 p-3 rounded-lg">
           Blink Tac Toe
         </h1>
         <PlayerSetup
@@ -174,8 +174,8 @@ export default function Game() {
   }
 
   return (
-    <div className="space-y-6 w-full max-w-xl bg-white p-6 rounded-lg shadow-lg">
-      <h1 className="text-2xl font-bold text-center text-purple-800 mb-4">
+   <div className="w-full bg-white p-4 md:p-6 rounded-lg shadow-lg">
+    <h1 className="text-2xl font-bold text-center text-purple-800 mb-4">
         Blink Tac Toe
       </h1>
       <ScoreBoard
